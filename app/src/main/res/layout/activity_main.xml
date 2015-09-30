@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways" />
 
-        <com.lukewilliamduncan.retweeter.activity.SearchEditText
+        <com.lukewilliamduncan.retweeter.activity.view.SearchEditText
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,6 +32,7 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_scrollFlags="scroll|enterAlways"
             app:tabGravity="center"
             app:tabMode="scrollable" />
