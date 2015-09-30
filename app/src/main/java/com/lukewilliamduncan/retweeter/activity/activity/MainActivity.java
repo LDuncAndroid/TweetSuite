@@ -1,4 +1,4 @@
-package com.lukewilliamduncan.retweeter.activity;
+package com.lukewilliamduncan.retweeter.activity.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
