@@ -10,8 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.lukewilliamduncan.retweeter.R;
+import com.lukewilliamduncan.retweeter.activity.SearchEditText;
 import com.lukewilliamduncan.retweeter.activity.fragment.TweetSearchFragment;
 
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchEditText.OnSearchPressedListener {
 
     /**
      * Views
@@ -29,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.tabLayout)
     TabLayout mTabLayout;
+
+    @Bind(R.id.searchEditText)
+    SearchEditText mSearchEditText;
 
     @Bind(R.id.viewPager)
     ViewPager mViewPager;
@@ -45,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setupToolbar();
-        setupViewPager();
         setupTabLayout();
+        setupSearchEditText();
+        setupViewPager();
     }
 
     @Override
@@ -59,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_new_tab:
-                //TODO - Show dialog or view asking user to enter term to search for
+                mSearchEditText.setVisibility(View.VISIBLE);
                 return true;
         }
         return false;
@@ -68,6 +74,29 @@ public class MainActivity extends AppCompatActivity {
     private void setupToolbar() {
         mToolbar.setTitle(getString(R.string.app_name));
         setSupportActionBar(mToolbar);
+    }
+
+    private void setupTabLayout() {
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private void setupSearchEditText() {
+        mSearchEditText.setOnSearchPressedListener(this);
     }
 
     private void setupViewPager() {
@@ -91,29 +120,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setupTabLayout() {
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-    }
-
-    private void addNewTab(String tabTitle){
+    private void addNewTab(String tabTitle) {
         mSearchTerms.add(tabTitle);
         mPagerAdapter.notifyDataSetChanged();
         mTabLayout.addTab(mTabLayout.newTab().setText(tabTitle));
+        mTabLayout.getTabAt(mTabLayout.getTabCount() - 1).select();
+        if (mTabLayout.getVisibility() == View.GONE) {
+            mTabLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void searchPressed(String searchTerm) {
+        if (searchTerm != null && searchTerm.replace(" ", "").length() > 0) {
+            addNewTab(searchTerm);
+            mSearchEditText.setVisibility(View.GONE);
+            mSearchEditText.setText(null);
+        }
     }
 
     private class TweetSearchTabPagerAdapter extends FragmentStatePagerAdapter {
