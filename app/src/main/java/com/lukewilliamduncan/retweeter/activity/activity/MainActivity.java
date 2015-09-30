@@ -13,8 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.lukewilliamduncan.retweeter.R;
-import com.lukewilliamduncan.retweeter.activity.SearchEditText;
 import com.lukewilliamduncan.retweeter.activity.fragment.TweetSearchFragment;
+import com.lukewilliamduncan.retweeter.activity.view.SearchEditText;
 
 import java.util.ArrayList;
 
@@ -66,6 +66,11 @@ public class MainActivity extends AppCompatActivity implements SearchEditText.On
         switch (item.getItemId()) {
             case R.id.action_new_tab:
                 mSearchEditText.setVisibility(View.VISIBLE);
+                return true;
+            case R.id.action_remove_tab:
+                if (mSearchTerms.size() > 0) {
+                    removeCurrentTab();
+                }
                 return true;
         }
         return false;
@@ -127,6 +132,24 @@ public class MainActivity extends AppCompatActivity implements SearchEditText.On
         mTabLayout.getTabAt(mTabLayout.getTabCount() - 1).select();
         if (mTabLayout.getVisibility() == View.GONE) {
             mTabLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void removeCurrentTab() {
+        int currentPosition = mViewPager.getCurrentItem();
+        mSearchTerms.remove(currentPosition);
+        mPagerAdapter.notifyDataSetChanged();
+
+        /**
+         * This hack is here because TabLayout provided by Android doesn't check if the child is
+         * null before checking if it's selected causing a null pointer exception when removing
+         * the last tab
+         */
+        if (mTabLayout.getTabCount() == 1) {
+            mTabLayout.setVisibility(View.GONE);
+            mTabLayout.removeAllTabs();
+        } else {
+            mTabLayout.removeTabAt(currentPosition);
         }
     }
 
