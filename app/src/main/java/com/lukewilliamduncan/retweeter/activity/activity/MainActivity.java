@@ -62,6 +62,16 @@ public class MainActivity extends AppCompatActivity implements SearchEditText.On
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mSearchTerms.size() > 0) {
+            menu.findItem(R.id.action_remove_tab).setEnabled(true);
+        } else {
+            menu.findItem(R.id.action_remove_tab).setEnabled(false);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_new_tab:
@@ -133,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements SearchEditText.On
         if (mTabLayout.getVisibility() == View.GONE) {
             mTabLayout.setVisibility(View.VISIBLE);
         }
+        invalidateOptionsMenu();
     }
 
     private void removeCurrentTab() {
@@ -151,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements SearchEditText.On
         } else {
             mTabLayout.removeTabAt(currentPosition);
         }
+        invalidateOptionsMenu();
     }
 
     @Override
