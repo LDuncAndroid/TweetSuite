@@ -1,9 +1,7 @@
 package com.lukewilliamduncan.retweeter.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 
 import com.lukewilliamduncan.retweeter.R;
 
