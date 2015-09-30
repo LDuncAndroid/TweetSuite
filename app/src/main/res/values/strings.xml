@@ -3,4 +3,5 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="new_tab">New Tab</string>
     <string name="search_term">Search term...</string>
+    <string name="remove_tab">Remove Tab</string>
 </resources>
