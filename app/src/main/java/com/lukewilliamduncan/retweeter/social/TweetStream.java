@@ -2,6 +2,7 @@ package com.lukewilliamduncan.retweeter.social;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -142,9 +143,14 @@ public class TweetStream implements HttpStream.OnLineReadListener {
      * Stop the HttpStream
      */
     public void finish() {
+        Log.d(TAG, "Stopping stream for: " + mSearchTerms[0]);
         if (mHttpStream != null) {
             mHttpStream.finish();
         }
+    }
+
+    public boolean isRunning() {
+        return mHttpStream != null && mHttpStream.isRunning();
     }
 
     public interface TweetListener {

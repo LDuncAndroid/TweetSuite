@@ -79,6 +79,11 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mSession = Twitter.getSessionManager().getActiveSession();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         setupTweetStream();
         startTwitterStream();
     }
@@ -98,7 +103,7 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
     }
 
     public void startTwitterStream() {
-        if (mTweetStream != null) {
+        if (mTweetStream != null && !mTweetStream.isRunning()) {
             try {
                 mTweetStream.init();
                 mTweetStream.start();
@@ -108,6 +113,12 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
                         Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopTwitterStream();
     }
 
     @Override

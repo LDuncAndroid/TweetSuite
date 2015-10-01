@@ -87,6 +87,10 @@ public class HttpStream extends Thread {
         mIsRunning = false;
     }
 
+    public boolean isRunning() {
+        return mIsRunning;
+    }
+
     public interface OnLineReadListener {
         void lineRead(String line);
     }
