@@ -2,23 +2,31 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lukewilliamduncan.retweeter">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".RetweetApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activity.MainActivity"
-            android:label="@string/title_activity_main">
+            android:name=".activity.LaunchActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/title_activity_main" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="2fd4efce4373bfe76bf2b45349c88d28e9c228c9" />
     </application>
 
 </manifest>
