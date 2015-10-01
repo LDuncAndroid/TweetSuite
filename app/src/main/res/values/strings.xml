@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Retweeter</string>
+    <string name="app_name">TweetSuite</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="new_tab">New Tab</string>
     <string name="search_term">Search term...</string>
