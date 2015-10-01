@@ -39,6 +39,7 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
 
     private TweetViewFetchAdapter<CompactTweetView> mTweetListAdapter;
     private ArrayList<Long> mTweetsIds;
+    private TwitterSession mSession;
 
     public static TweetSearchFragment newInstance(String[] searchTerms) {
         TweetSearchFragment fragment = new TweetSearchFragment();
@@ -77,37 +78,48 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TwitterSession session = Twitter.getSessionManager().getActiveSession();
-        if (session != null) {
-            TwitterAuthToken authToken = session.getAuthToken();
-            startTwitterStream(authToken.token, authToken.secret);
+        mSession = Twitter.getSessionManager().getActiveSession();
+        setupTweetStream();
+        startTwitterStream();
+    }
+
+    private void setupTweetStream() {
+        if (mSession != null) {
+            TwitterAuthToken authToken = mSession.getAuthToken();
+            mTweetStream = new TweetStream(
+                    getActivity(),
+                    this,
+                    authToken.token,
+                    authToken.secret,
+                    BuildConfig.TWITTER_CONSUMER_KEY,
+                    BuildConfig.TWITTER_CONSUMER_SECRET,
+                    mSearchTerms);
         }
     }
 
-    private void startTwitterStream(String authToken, String authSecret) {
-        mTweetStream = new TweetStream(
-                getActivity(),
-                this,
-                authToken,
-                authSecret,
-                BuildConfig.TWITTER_CONSUMER_KEY,
-                BuildConfig.TWITTER_CONSUMER_SECRET,
-                mSearchTerms);
-
-        try {
-            mTweetStream.init();
-            mTweetStream.start();
-        } catch (TweetStream.TweetStreamException e) {
-            Toast.makeText(getContext(),
-                    getString(R.string.unable_to_start_tweet_stream) + " for: " + mSearchTerms + e.getMessage(),
-                    Toast.LENGTH_SHORT).show();
+    public void startTwitterStream() {
+        if (mTweetStream != null) {
+            try {
+                mTweetStream.init();
+                mTweetStream.start();
+            } catch (TweetStream.TweetStreamException e) {
+                Toast.makeText(getContext(),
+                        getString(R.string.unable_to_start_tweet_stream) + " for: " + mSearchTerms + e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     @Override
     public void onDestroy() {
-        mTweetStream.finish();
+        stopTwitterStream();
         super.onDestroy();
+    }
+
+    public void stopTwitterStream() {
+        if (mTweetStream != null) {
+            mTweetStream.finish();
+        }
     }
 
     @Override

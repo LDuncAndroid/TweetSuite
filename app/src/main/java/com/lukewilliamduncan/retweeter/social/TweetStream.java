@@ -142,7 +142,9 @@ public class TweetStream implements HttpStream.OnLineReadListener {
      * Stop the HttpStream
      */
     public void finish() {
-        mHttpStream.finish();
+        if (mHttpStream != null) {
+            mHttpStream.finish();
+        }
     }
 
     public interface TweetListener {
