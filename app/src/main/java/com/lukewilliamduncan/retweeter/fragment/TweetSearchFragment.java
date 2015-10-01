@@ -12,6 +12,9 @@ import com.lukewilliamduncan.retweeter.BuildConfig;
 import com.lukewilliamduncan.retweeter.R;
 import com.lukewilliamduncan.retweeter.model.Tweet;
 import com.lukewilliamduncan.retweeter.social.TweetStream;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterSession;
 
 /**
  * Created by luke on 30/09/15.
@@ -48,11 +51,19 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        TwitterSession session = Twitter.getSessionManager().getActiveSession();
+        if (session != null) {
+            TwitterAuthToken authToken = session.getAuthToken();
+            startTwitterStream(authToken.token, authToken.secret);
+        }
+    }
+
+    private void startTwitterStream(String authToken, String authSecret) {
         mTweetStream = new TweetStream(
                 getActivity(),
                 this,
-                "PlaceholderAccessToken",
-                "PlaceholderAccessSecret",
+                authToken,
+                authSecret,
                 BuildConfig.TWITTER_CONSUMER_KEY,
                 BuildConfig.TWITTER_CONSUMER_SECRET,
                 mSearchTerms);
