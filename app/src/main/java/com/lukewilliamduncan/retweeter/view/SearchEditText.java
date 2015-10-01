@@ -1,4 +1,4 @@
-package com.lukewilliamduncan.retweeter.activity.view;
+package com.lukewilliamduncan.retweeter.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,7 +8,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.lukewilliamduncan.retweeter.activity.util.ViewUtils;
+import com.lukewilliamduncan.retweeter.util.ViewUtils;
 
 /**
  * Created by luke on 30/09/15.

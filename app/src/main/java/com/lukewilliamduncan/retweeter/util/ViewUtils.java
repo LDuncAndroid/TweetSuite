@@ -1,4 +1,4 @@
-package com.lukewilliamduncan.retweeter.activity.util;
+package com.lukewilliamduncan.retweeter.util;
 
 import android.content.Context;
 import android.view.View;

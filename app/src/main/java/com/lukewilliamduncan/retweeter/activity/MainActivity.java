@@ -1,4 +1,4 @@
-package com.lukewilliamduncan.retweeter.activity.activity;
+package com.lukewilliamduncan.retweeter.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -13,8 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.lukewilliamduncan.retweeter.R;
-import com.lukewilliamduncan.retweeter.activity.fragment.TweetSearchFragment;
-import com.lukewilliamduncan.retweeter.activity.view.SearchEditText;
+import com.lukewilliamduncan.retweeter.fragment.TweetSearchFragment;
+import com.lukewilliamduncan.retweeter.view.SearchEditText;
 
 import java.util.ArrayList;
 
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements SearchEditText.On
 
         @Override
         public Fragment getItem(int position) {
-            return TweetSearchFragment.newInstance(mSearchTerms.get(position));
+            return TweetSearchFragment.newInstance(mSearchTerms.get(position).split(" "));
         }
 
         @Override

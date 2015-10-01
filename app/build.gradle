@@ -28,6 +28,19 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    applicationVariants.all { variant ->
+        Properties twitterProps = new Properties()
+        twitterProps.load(new FileInputStream(rootDir.absolutePath + '/twitter.props'))
+
+        def STRING = "String"
+
+        def TWITTER_CONSUMER_KEY = "TWITTER_CONSUMER_KEY"
+        def TWITTER_CONSUMER_SECRET = "TWITTER_CONSUMER_SECRET"
+
+        buildConfigField STRING, TWITTER_CONSUMER_KEY, twitterProps.twitterConsumerKey
+        buildConfigField STRING, TWITTER_CONSUMER_SECRET, twitterProps.twitterConsumerSecret
+    }
 }
 
 dependencies {
@@ -36,4 +49,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'oauth.signpost:signpost-commonshttp4:1.2'
+    compile 'com.google.code.gson:gson:2.3.1'
 }
