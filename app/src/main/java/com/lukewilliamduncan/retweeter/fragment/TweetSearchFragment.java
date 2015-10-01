@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.lukewilliamduncan.retweeter.BuildConfig;
@@ -15,6 +16,13 @@ import com.lukewilliamduncan.retweeter.social.TweetStream;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.tweetui.CompactTweetView;
+import com.twitter.sdk.android.tweetui.TweetViewFetchAdapter;
+
+import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by luke on 30/09/15.
@@ -23,8 +31,14 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
 
     private static final String KEY_SEARCH_TERMS = "search_terms";
 
+    @Bind(R.id.tweetList)
+    ListView mTweetList;
+
     private String[] mSearchTerms;
     private TweetStream mTweetStream;
+
+    private TweetViewFetchAdapter<CompactTweetView> mTweetListAdapter;
+    private ArrayList<Long> mTweetsIds;
 
     public static TweetSearchFragment newInstance(String[] searchTerms) {
         TweetSearchFragment fragment = new TweetSearchFragment();
@@ -45,7 +59,19 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new View(getContext());
+        View rootView = inflater.inflate(R.layout.fragment_tweet_search, null);
+        ButterKnife.bind(this, rootView);
+        setupTweetListAdapter();
+        return rootView;
+    }
+
+    /**
+     * Using deprecated TweetViewFetchAdapter as the Timelines that have superseeded the adapter
+     * do not allow for use of the Streaming API
+     */
+    private void setupTweetListAdapter() {
+        mTweetListAdapter = new TweetViewFetchAdapter<CompactTweetView>(getContext());
+        mTweetList.setAdapter(mTweetListAdapter);
     }
 
     @Override
@@ -86,8 +112,10 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
 
     @Override
     public void newTweet(Tweet tweet) {
-        if (getContext() != null) {
-            Toast.makeText(getContext(), tweet.getText(), Toast.LENGTH_SHORT).show();
+        if (mTweetsIds == null) {
+            mTweetsIds = new ArrayList<>();
         }
+        mTweetsIds.add(tweet.getId());
+        mTweetListAdapter.setTweetIds(mTweetsIds);
     }
 }
