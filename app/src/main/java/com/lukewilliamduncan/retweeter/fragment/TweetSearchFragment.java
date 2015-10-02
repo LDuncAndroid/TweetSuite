@@ -49,14 +49,6 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null && getArguments().containsKey(KEY_SEARCH_TERMS)) {
-
-        }
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,7 +110,7 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
                 mTweetStream.start();
             } catch (TweetStream.TweetStreamException e) {
                 Toast.makeText(getContext(),
-                        getString(R.string.unable_to_start_tweet_stream) + " for: " + mSearchTerms + e.getMessage(),
+                        getString(R.string.unable_to_start_tweet_stream) + " for: " + mSearchTerms[0] + e.getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
         }
