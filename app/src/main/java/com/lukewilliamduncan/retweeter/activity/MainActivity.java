@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.lukewilliamduncan.retweeter.R;
 import com.lukewilliamduncan.retweeter.fragment.TweetSearchFragment;
@@ -37,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements SearchEditText.On
 
     @Bind(R.id.viewPager)
     ViewPager mViewPager;
+
+    @Bind(R.id.noTabText)
+    TextView mNoTabText;
 
     private final ArrayList<String> mSearchTerms = new ArrayList<>();
 
@@ -142,6 +146,9 @@ public class MainActivity extends AppCompatActivity implements SearchEditText.On
             mTabLayout.setVisibility(View.VISIBLE);
         }
         invalidateOptionsMenu();
+        if(mNoTabText.getVisibility() == View.VISIBLE) {
+            mNoTabText.setVisibility(View.GONE);
+        }
     }
 
     private void removeCurrentTab() {
@@ -161,6 +168,9 @@ public class MainActivity extends AppCompatActivity implements SearchEditText.On
             mTabLayout.removeTabAt(currentPosition);
         }
         invalidateOptionsMenu();
+        if(mTabLayout.getTabCount() == 0) {
+            mNoTabText.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

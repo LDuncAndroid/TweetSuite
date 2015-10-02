@@ -7,4 +7,5 @@
     <string name="unable_to_start_tweet_stream">Unable to start Tweet Stream</string>
     <string name="retweeted">Retweeted!</string>
     <string name="retweet">Retweet</string>
+    <string name="tap_the_plus_icon">Tap the \'+\' icon to add a new tab</string>
 </resources>
