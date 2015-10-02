@@ -13,12 +13,14 @@ import com.lukewilliamduncan.retweeter.BuildConfig;
 import com.lukewilliamduncan.retweeter.R;
 import com.lukewilliamduncan.retweeter.adapter.TweetListAdapter;
 import com.lukewilliamduncan.retweeter.model.Tweet;
+import com.lukewilliamduncan.retweeter.social.TweetInteraction;
 import com.lukewilliamduncan.retweeter.social.TweetStream;
 import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
-
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,7 +39,6 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
     private TweetStream mTweetStream;
 
     private TweetListAdapter mTweetListAdapter;
-    private ArrayList<Long> mTweetsIds;
     private TwitterSession mSession;
 
     public static TweetSearchFragment newInstance(String[] searchTerms) {
@@ -62,18 +63,27 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
         View rootView = inflater.inflate(R.layout.fragment_tweet_search, null);
         ButterKnife.bind(this, rootView);
         setupTweetListAdapter();
+        setupTweetList();
         return rootView;
     }
 
-    /**
-     * Using deprecated TweetViewFetchAdapter as the Timelines that have superseeded the adapter
-     * do not allow for use of the Streaming API
-     */
     private void setupTweetListAdapter() {
-        mTweetListAdapter = new TweetListAdapter(getContext());
+        mTweetListAdapter = new TweetListAdapter(getContext(), new TweetListAdapter.OnRetweetButtonPressedListener() {
+            @Override
+            public void onRetweetButtonPressed(long tweetId) {
+                retweet(tweetId);
+            }
+        });
+    }
+
+    private void setupTweetList() {
         mTweetList.setAdapter(mTweetListAdapter);
     }
 
+    /**
+     * Called when the ViewPager changes pages
+     * @param isVisibleToUser
+     */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -123,6 +133,19 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
     @Override
     public void newTweet(Tweet tweet) {
         mTweetListAdapter.addItem(tweet);
-        Toast.makeText(getContext(), tweet.getText(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void retweet(long tweetId) {
+        TweetInteraction.retweet(tweetId, new Callback<com.twitter.sdk.android.core.models.Tweet>() {
+            @Override
+            public void success(Result<com.twitter.sdk.android.core.models.Tweet> result) {
+                Toast.makeText(getContext(), getString(R.string.retweeted), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(TwitterException e) {
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

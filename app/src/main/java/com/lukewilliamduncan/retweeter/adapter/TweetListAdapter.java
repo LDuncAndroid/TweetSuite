@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,11 +26,18 @@ import butterknife.ButterKnife;
 public class TweetListAdapter extends BaseAdapter {
 
     private final Context mContext;
+    private final OnRetweetButtonPressedListener mOnRetweetButtonPressedListener;
+
     private List<Tweet> mTweets;
     private final ArrayList<Long> mTweetsIds;
 
-    public TweetListAdapter(Context context) {
+    /**
+     * @param context
+     * @param listener
+     */
+    public TweetListAdapter(Context context, OnRetweetButtonPressedListener listener) {
         mContext = context;
+        mOnRetweetButtonPressedListener = listener;
         mTweets = new ArrayList<>();
         mTweetsIds = new ArrayList<>();
     }
@@ -67,9 +75,17 @@ public class TweetListAdapter extends BaseAdapter {
             vh = (ViewHolder) convertView.getTag();
         }
 
-        Tweet tweet = mTweets.get(position);
+        final Tweet tweet = mTweets.get(position);
         vh.userName.setText(tweet.getUser().getName());
         vh.message.setText(tweet.getText());
+        vh.retweetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnRetweetButtonPressedListener != null) {
+                    mOnRetweetButtonPressedListener.onRetweetButtonPressed(tweet.getId());
+                }
+            }
+        });
 
         Picasso.with(mContext)
                 .load(tweet.getUser().getProfileImageUrl())
@@ -88,6 +104,10 @@ public class TweetListAdapter extends BaseAdapter {
         }
     }
 
+    public interface OnRetweetButtonPressedListener {
+        void onRetweetButtonPressed(long tweetId);
+    }
+
     static class ViewHolder {
         @Bind(R.id.tweetUser)
         TextView userName;
@@ -95,6 +115,8 @@ public class TweetListAdapter extends BaseAdapter {
         TextView message;
         @Bind(R.id.tweetUserImage)
         ImageView userImage;
+        @Bind(R.id.retweetBtn)
+        Button retweetBtn;
 
         public ViewHolder(View convertView) {
             ButterKnife.bind(this, convertView);

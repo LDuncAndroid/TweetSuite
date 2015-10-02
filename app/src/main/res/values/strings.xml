@@ -5,4 +5,6 @@
     <string name="search_term">Search term...</string>
     <string name="remove_tab">Remove Tab</string>
     <string name="unable_to_start_tweet_stream">Unable to start Tweet Stream</string>
+    <string name="retweeted">Retweeted!</string>
+    <string name="retweet">Retweet</string>
 </resources>
