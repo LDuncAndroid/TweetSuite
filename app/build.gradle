@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
 
@@ -17,19 +32,62 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
-            proguardFiles 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             signingConfig signingConfigs.debug
         }
     }
+
+    applicationVariants.all { variant ->
+        Properties twitterProps = new Properties()
+        twitterProps.load(new FileInputStream(rootDir.absolutePath + '/twitter.props'))
+
+        def STRING = "String"
+
+        def TWITTER_CONSUMER_KEY = "TWITTER_CONSUMER_KEY"
+        def TWITTER_CONSUMER_SECRET = "TWITTER_CONSUMER_SECRET"
+
+        buildConfigField STRING, TWITTER_CONSUMER_KEY, twitterProps.twitterConsumerKey
+        buildConfigField STRING, TWITTER_CONSUMER_SECRET, twitterProps.twitterConsumerSecret
+    }
 }
 
+/**
+ * Defining properties for signing release
+ */
+def releaseProps = new Properties()
+releaseProps.load(new FileInputStream(rootProject.file("release.properties")))
+android.signingConfigs.release.storeFile rootProject.file(releaseProps.keyStore)
+android.signingConfigs.release.storePassword releaseProps.keyStorePassword
+android.signingConfigs.release.keyAlias releaseProps.keyAlias
+android.signingConfigs.release.keyPassword releaseProps.keyAliasPassword
+
+/**
+ * Defining properties for signing debug
+ */
+def debugProps = new Properties()
+debugProps.load(new FileInputStream(rootProject.file("debug.properties")))
+android.signingConfigs.debug.storeFile rootProject.file(debugProps.keyStore)
+android.signingConfigs.debug.storePassword debugProps.keyStorePassword
+android.signingConfigs.debug.keyAlias debugProps.keyAlias
+android.signingConfigs.debug.keyPassword debugProps.keyAliasPassword
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:design:23.0.1'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'oauth.signpost:signpost-commonshttp4:1.2'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile('com.twitter.sdk.android:twitter:1.8.0@aar') {
+        transitive = true;
+    }
 }

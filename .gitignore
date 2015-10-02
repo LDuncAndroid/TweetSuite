@@ -12,3 +12,5 @@
 *.log
 /release.properties
 /debug.properties
+/twitter.props
+*.jks

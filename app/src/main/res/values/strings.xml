@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Retweeter</string>
+    <string name="app_name">TweetSuite</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="new_tab">New Tab</string>
+    <string name="search_term">Search term...</string>
+    <string name="remove_tab">Remove Tab</string>
+    <string name="unable_to_start_tweet_stream">Unable to start Tweet Stream</string>
+    <string name="retweeted">Retweeted!</string>
+    <string name="retweet">Retweet</string>
+    <string name="tap_the_plus_icon">Tap the \'+\' icon to add a new tab</string>
 </resources>
