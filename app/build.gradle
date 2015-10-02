@@ -84,6 +84,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'oauth.signpost:signpost-commonshttp4:1.2'
     compile 'com.google.code.gson:gson:2.3.1'
     compile('com.twitter.sdk.android:twitter:1.8.0@aar') {
