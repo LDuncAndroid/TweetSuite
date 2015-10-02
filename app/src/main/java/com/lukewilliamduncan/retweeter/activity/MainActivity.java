@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity implements SearchEditText.On
 
     private TweetSearchTabPagerAdapter mPagerAdapter;
 
-    private int mOldPosition;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,32 +120,20 @@ public class MainActivity extends AppCompatActivity implements SearchEditText.On
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
-                if (position != mOldPosition) {
-                    if (mOldPosition < mPagerAdapter.getCount()) {
-                        ((TweetSearchFragment) mPagerAdapter.getItem(mOldPosition)).stopTwitterStream();
-                    }
-                    ((TweetSearchFragment) mPagerAdapter.getItem(position)).startTwitterStream();
-                    mOldPosition = position;
-                }
                 mTabLayout.getTabAt(position).select();
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
 
     private void addNewTab(String tabTitle) {
-        if (mTabLayout.getTabCount() > 0) {
-            removeCurrentTab();
-        }
         mSearchTerms.add(tabTitle);
         mPagerAdapter.notifyDataSetChanged();
         mTabLayout.addTab(mTabLayout.newTab().setText(tabTitle));

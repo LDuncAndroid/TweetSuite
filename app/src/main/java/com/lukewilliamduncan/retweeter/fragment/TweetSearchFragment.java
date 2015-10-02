@@ -11,13 +11,12 @@ import android.widget.Toast;
 
 import com.lukewilliamduncan.retweeter.BuildConfig;
 import com.lukewilliamduncan.retweeter.R;
+import com.lukewilliamduncan.retweeter.adapter.TweetListAdapter;
 import com.lukewilliamduncan.retweeter.model.Tweet;
 import com.lukewilliamduncan.retweeter.social.TweetStream;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.tweetui.CompactTweetView;
-import com.twitter.sdk.android.tweetui.TweetViewFetchAdapter;
 
 import java.util.ArrayList;
 
@@ -37,7 +36,7 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
     private String[] mSearchTerms;
     private TweetStream mTweetStream;
 
-    private TweetViewFetchAdapter<CompactTweetView> mTweetListAdapter;
+    private TweetListAdapter mTweetListAdapter;
     private ArrayList<Long> mTweetsIds;
     private TwitterSession mSession;
 
@@ -53,7 +52,7 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null && getArguments().containsKey(KEY_SEARCH_TERMS)) {
-            mSearchTerms = getArguments().getStringArray(KEY_SEARCH_TERMS);
+
         }
     }
 
@@ -71,21 +70,21 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
      * do not allow for use of the Streaming API
      */
     private void setupTweetListAdapter() {
-        mTweetListAdapter = new TweetViewFetchAdapter<CompactTweetView>(getContext());
+        mTweetListAdapter = new TweetListAdapter(getContext());
         mTweetList.setAdapter(mTweetListAdapter);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mSession = Twitter.getSessionManager().getActiveSession();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        setupTweetStream();
-        startTwitterStream();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            mSearchTerms = getArguments().getStringArray(KEY_SEARCH_TERMS);
+            mSession = Twitter.getSessionManager().getActiveSession();
+            setupTweetStream();
+            startTwitterStream();
+        } else {
+            stopTwitterStream();
+        }
     }
 
     private void setupTweetStream() {
@@ -115,18 +114,6 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        stopTwitterStream();
-    }
-
-    @Override
-    public void onDestroy() {
-        stopTwitterStream();
-        super.onDestroy();
-    }
-
     public void stopTwitterStream() {
         if (mTweetStream != null) {
             mTweetStream.finish();
@@ -135,10 +122,7 @@ public class TweetSearchFragment extends Fragment implements TweetStream.TweetLi
 
     @Override
     public void newTweet(Tweet tweet) {
-        if (mTweetsIds == null) {
-            mTweetsIds = new ArrayList<>();
-        }
-        mTweetsIds.add(tweet.getId());
-        mTweetListAdapter.setTweetIds(mTweetsIds);
+        mTweetListAdapter.addItem(tweet);
+        Toast.makeText(getContext(), tweet.getText(), Toast.LENGTH_SHORT).show();
     }
 }

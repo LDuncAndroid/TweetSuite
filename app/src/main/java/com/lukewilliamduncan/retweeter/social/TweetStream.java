@@ -11,6 +11,8 @@ import com.lukewilliamduncan.retweeter.model.Tweet;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
@@ -44,6 +46,7 @@ public class TweetStream implements HttpStream.OnLineReadListener {
     private Gson mGson;
     private HttpStream mHttpStream;
     private String mOAuthSignedUrl;
+    private ExecutorService executor;
 
     public TweetStream(Context context, TweetListener tweetListener, String accessToken,
                        String accessSecret, String consumerKey, String consumerSecret,
@@ -108,7 +111,8 @@ public class TweetStream implements HttpStream.OnLineReadListener {
      * Start HttpStream on another Thread
      */
     public void start() {
-        mHttpStream.start();
+        executor = Executors.newFixedThreadPool(1);
+        executor.execute(mHttpStream);
     }
 
     /**
@@ -144,8 +148,9 @@ public class TweetStream implements HttpStream.OnLineReadListener {
      */
     public void finish() {
         Log.d(TAG, "Stopping stream for: " + mSearchTerms[0]);
-        if (mHttpStream != null) {
+        if (executor != null) {
             mHttpStream.finish();
+            executor.shutdownNow();
         }
     }
 

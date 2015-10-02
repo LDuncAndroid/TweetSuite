@@ -10,7 +10,7 @@ import java.net.URL;
 /**
  * Created by luke on 01/10/15.
  */
-public class HttpStream extends Thread {
+public class HttpStream implements Runnable {
 
     private final URL mUrl;
     private final OnLineReadListener mOnLineReadListener;
