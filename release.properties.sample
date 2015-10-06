@@ -1,0 +1,4 @@
+keyStore=keystore.jks
+keyStorePassword=myKeystorePassword
+keyAlias=myKeyAlias
+keyAliasPassword=myKeyAliasPassword
