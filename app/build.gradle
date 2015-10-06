@@ -31,6 +31,11 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        Properties twitterProps = new Properties()
+        twitterProps.load(new FileInputStream(rootDir.absolutePath + '/twitter.props'))
+
+        manifestPlaceholders = [ twitterAppId:twitterProps.twitterAppId]
     }
 
     buildTypes {
@@ -85,7 +90,9 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'oauth.signpost:signpost-commonshttp4:1.2'
+    compile ('oauth.signpost:signpost-commonshttp4:1.2') {
+        exclude module: 'httpclient'
+    }
     compile 'com.google.code.gson:gson:2.3.1'
     compile('com.twitter.sdk.android:twitter:1.8.0@aar') {
         transitive = true;

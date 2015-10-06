@@ -28,7 +28,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="2fd4efce4373bfe76bf2b45349c88d28e9c228c9" />
+            android:value="${twitterAppId}" />
     </application>
 
 </manifest>
