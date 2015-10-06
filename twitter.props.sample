@@ -1,0 +1,5 @@
+twitterConsumerKey "<consumer_key_here>"
+twitterConsumerSecret "<consumer_secret_here>"
+
+# We must not use quotation marks here as they are also included when merging
+twitterAppId = <app_id_here>
